@@ -18,7 +18,7 @@ export class TerminalError extends Error {
 
 type JsonParseErrorOptions = {
   json: string;
-  cause?: Error;
+     cause?: Error;
 };
 
 export class JsonParseError extends Error {
