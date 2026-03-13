@@ -1,4 +1,4 @@
-import type { MonitorConfiguration } from '../types/monitor';
+import type { Monitor, MonitorConfiguration } from '../types/monitor';
 
 export function formatMonitorConfiguration(configuration: MonitorConfiguration): string {
   if (configuration.disabled === true) {
@@ -41,4 +41,27 @@ export function formatMonitorConfiguration(configuration: MonitorConfiguration):
   }
 
   return args.join(',');
+}
+
+export function createMonitorConfiguration(
+  monitor: Monitor,
+  configuration: Partial<MonitorConfiguration>,
+): MonitorConfiguration {
+  return {
+    name: monitor.name,
+    width: monitor.width,
+    height: monitor.height,
+    refreshRate: monitor.refreshRate,
+    x: monitor.x,
+    y: monitor.y,
+    scale: monitor.scale,
+    mirrorOf: monitor.mirrorOf,
+    transform: monitor.transform,
+    disabled: monitor.disabled,
+    sdrBrightness: monitor.sdrBrightness,
+    sdrSaturation: monitor.sdrSaturation,
+    vrr: monitor.vrr,
+    cm: monitor.colorManagementPreset,
+    ...configuration,
+  };
 }

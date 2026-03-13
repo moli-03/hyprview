@@ -8,5 +8,5 @@ export type HyprlandQueryPort = {
   getMonitors: () => ResultAsync<Monitor[], HyprlandQueryError>;
   applyMonitorConfiguration: (
     configuration: MonitorConfiguration,
-  ) => ResultAsync<void, HyprlandQueryError>;
+  ) => ResultAsync<string, HyprlandQueryError>;
 };

@@ -1,10 +1,11 @@
-import { Box, Text, useInput } from 'ink';
+import { Box, Text, useInput, useStdout } from 'ink';
 import { useMonitors } from './use-monitors';
 import { Arrow, MonitorShort } from './short';
 import { useMemo, useState } from 'react';
 import { useTheme } from '../../theme/context';
 import { MonitorSetup } from './setup';
 import { MirrorMenu } from './mirror-menu';
+import type { Monitor } from '../../hyprland';
 
 type MonitorOverviewProps = {
   width: number;
@@ -17,11 +18,22 @@ export const MonitorOverview = ({ width, height }: MonitorOverviewProps) => {
   const [showMirrorMenu, setShowMirrorMenu] = useState(false);
   const selectedMonitor = monitors[selectedIndex];
   const theme = useTheme();
+  const { write } = useStdout();
 
   const mirrorMonitors = useMemo(
     () => monitors.filter((_, i) => i !== selectedIndex),
     [selectedIndex, monitors],
   );
+
+  const handleMirrorSelect = (monitor: Monitor | null) => {
+    if (monitor) {
+      setShowMirrorMenu(false);
+
+      if (selectedMonitor) {
+        // TODO: Apply monitor configuration
+      }
+    }
+  };
 
   useInput(
     (input) => {
@@ -70,7 +82,7 @@ export const MonitorOverview = ({ width, height }: MonitorOverviewProps) => {
             <MirrorMenu
               monitors={mirrorMonitors}
               selectedMonitor={selectedMonitor!}
-              onSelect={() => setShowMirrorMenu(false)}
+              onSelect={handleMirrorSelect}
             />
           </Box>
         )}

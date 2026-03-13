@@ -1,3 +1,16 @@
+export type ColorManagementPreset =
+  | 'none'
+  | 'srgb'
+  | 'hdr'
+  | 'hdredid'
+  | 'dcip3'
+  | 'dp3'
+  | 'adobe'
+  | 'wide'
+  | 'edid'
+  | 'auto';
+export type Transform = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
 export type Monitor = {
   id: number;
   name: string;
@@ -16,10 +29,10 @@ export type Monitor = {
   specialWorkspace: { id: number; name: string };
   reserved: [number, number, number, number];
   scale: number;
-  transform: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  transform: Transform;
   focused: boolean;
   dpmsStatus: boolean;
-  vrr: boolean;
+  vrr: 0 | 1 | 2;
   solitary: string;
   solitaryBlockedBy: string[];
   activelyTearing: boolean;
@@ -30,7 +43,7 @@ export type Monitor = {
   currentFormat: string;
   mirrorOf: string;
   availableModes: string[];
-  colorManagementPreset: string;
+  colorManagementPreset: ColorManagementPreset;
   sdrBrightness: number;
   sdrSaturation: number;
   sdrMinLuminance: number;
@@ -47,9 +60,9 @@ export type MonitorConfiguration = {
   scale: number;
   mirrorOf: string | null;
   disabled?: boolean;
-  transform?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  transform?: Transform;
   bitdepth?: 8 | 10;
-  cm?: 'none' | 'srgb' | 'hdr' | 'hdredid' | 'dcip3' | 'dp3' | 'adobe' | 'wide' | 'edid' | 'auto';
+  cm?: ColorManagementPreset;
   sdrBrightness?: number;
   sdrSaturation?: number;
   sdrEotf?: 0 | 1 | 2;

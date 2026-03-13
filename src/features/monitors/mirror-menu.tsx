@@ -46,7 +46,7 @@ export const MirrorMenu = ({ monitors, selectedMonitor, onSelect }: MirrorMenuPr
         ))}
       </Box>
       <Text color={theme.muted} italic>
-        [j/k] to navigate, [enter] to select, [esc] to cancel
+        [j/k] to navigate, [enter] to select [esc] to cancel
       </Text>
     </Box>
   );

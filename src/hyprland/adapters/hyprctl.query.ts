@@ -5,9 +5,10 @@ import type { Monitor, MonitorConfiguration } from '../types/monitor';
 import { formatMonitorConfiguration } from '../utils/monitor';
 
 export const hyprctlQueryAdapter: HyprlandQueryPort = {
-  getMonitors: () => execute('hyprctl monitors -j').andThen(parseJson<Monitor[]>),
+  getMonitors: () => execute('hyprctl monitors all -j').andThen(parseJson<Monitor[]>),
+
   applyMonitorConfiguration: (configuration: MonitorConfiguration) => {
     const monitorConfiguration = formatMonitorConfiguration(configuration);
-    return execute(['hyprctl', 'monitor', monitorConfiguration]).map(() => void 0);
+    return execute(['hyprctl', 'keyword', 'monitor', monitorConfiguration]);
   },
 };
