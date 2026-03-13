@@ -56,7 +56,10 @@ export const MonitorSetup = ({ monitors, width, height, selectedMonitorId }: Mon
             flexDirection="column"
           >
             <Text color={isSelected ? 'cyan' : undefined}>{constraint.monitor.name}</Text>
-            <Text color={isSelected ? 'cyan' : undefined}>{constraint.monitor.width}x{constraint.monitor.height}@{formatRefreshRate(constraint.monitor.refreshRate)}Hz</Text>
+            <Text color={isSelected ? 'cyan' : undefined}>
+              {constraint.monitor.width}x{constraint.monitor.height}@
+              {formatRefreshRate(constraint.monitor.refreshRate)}Hz
+            </Text>
           </Box>
         );
       })}

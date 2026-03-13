@@ -12,3 +12,14 @@ export type Monitor = {
   mirrored: boolean;
   mirrorOf: string | null;
 };
+
+export type MonitorConfiguration = {
+  name: string;
+  width: number;
+  height: number;
+  refreshRate: number;
+  x: number;
+  y: number;
+  scale: number;
+  mirrorOf: string | null;
+};

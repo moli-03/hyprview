@@ -4,4 +4,4 @@ export const TERMINAL_CHAR_ASPECT_RATIO = 1.7;
 export const correctRowAspect = (rows: number): number => {
   const correctedRows = rows / TERMINAL_CHAR_ASPECT_RATIO;
   return Math.floor(correctedRows);
-}
+};
