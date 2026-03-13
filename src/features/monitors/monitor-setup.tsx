@@ -6,7 +6,7 @@ type MonitorSetupProps = {
   monitors: Monitor[];
   width: number;
   height: number;
-  selectedMonitorId: string;
+  selectedMonitorId: number;
 };
 
 export const MonitorSetup = ({ monitors, width, height, selectedMonitorId }: MonitorSetupProps) => {
