@@ -12,5 +12,8 @@ export const useMonitors = () => {
     fetchMonitors();
   }, []);
 
-  return { monitors, refetch: fetchMonitors };
+  return {
+    monitors,
+    refetch: fetchMonitors,
+  };
 };
