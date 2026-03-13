@@ -27,7 +27,7 @@ export const App = () => {
       </Box>
       <Box flexDirection="column" flexGrow={1} borderStyle="round" paddingX={1} height={20}>
         <Text color="cyan" bold>Setup:</Text>
-        <MonitorSetup monitors={monitors} width={80} height={correctRowAspect(80 / 16 * 9)} />
+        <MonitorSetup monitors={monitors} width={80} height={correctRowAspect(80 / 16 * 9)} selectedMonitorId={monitors[selectedIndex]?.id ?? ''} />
       </Box>
     </Box>
   )
