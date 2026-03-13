@@ -1,7 +1,9 @@
-import { Box, Newline, Text } from 'ink';
+import { Box, Text } from 'ink';
 import { Monitor } from '../../hyprland';
 import { correctRowAspect } from '../../utils/scaling';
 import { useTheme } from '../../theme/context';
+
+const formatRefreshRate = (refreshRate: number) => refreshRate.toFixed(2);
 
 type MonitorSetupProps = {
   monitors: Monitor[];
@@ -35,12 +37,8 @@ export const MonitorSetup = ({ monitors, width, height, selectedMonitorId }: Mon
 
   const monitorConstraints = monitors.map(calculateMonitorConstraints);
 
-  const formatRefreshRate = (refreshRate: number) => {
-    return refreshRate.toFixed(2);
-  };
-
   return (
-    <Box width={width} height={height}>
+    <Box width={width} height={correctRowAspect(height)}>
       {monitorConstraints.map((constraint) => {
         const isSelected = constraint.monitor.id === selectedMonitorId;
         return (
