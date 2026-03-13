@@ -18,7 +18,9 @@ Hyprview is a TUI (Terminal UI) application for managing Hyprland monitors and w
 
 **Ports & Adapters:** `hyprland/ports/` defines abstract interfaces; `hyprland/adapters/` holds concrete implementations (e.g., calling `hyprctl` CLI). Wire up via `hyprland/index.ts`.
 
-**Error handling:** All fallible operations use [neverthrow](https://github.com/supermacro/neverthrow) `Result`/`ResultAsync`. Custom error types live in `errors/index.ts` (`TerminalError`, `JsonParseError`).
+**Error handling:** All fallible operations use [neverthrow](https://github.com/supermacro/neverthrow) `Result`/`ResultAsync`. Custom error types live in `errors/index.ts` (`TerminalError`, `JsonParseError`, `ConfigError`).
+
+**Theming:** All colors come from a centralized theme system. Components call `useTheme()` from `src/theme/context.tsx` — never hardcode color strings. The default theme is in `src/config/defaults.ts`. At startup, `src/cli.tsx` accepts an optional `--config <file>` flag pointing to a JSON file with a `colors` field, which can be either a [base16](https://github.com/chriskempson/base16) palette (`base00`–`base0F`) or a semantic palette (`primary`, `secondary`, etc.). The resolver in `src/config/resolver.ts` converts either format to `Theme = SemanticColors` before passing it to `ThemeProvider`.
 
 **Data flow:** App → `useMonitors()` hook → `HyprlandQueryPort.getMonitors()` → `hyprctlQueryAdapter` → runs `hyprctl monitors -j` → parsed into `Monitor[]`.
 
