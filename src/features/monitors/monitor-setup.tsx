@@ -1,6 +1,7 @@
 import { Box, Newline, Text } from 'ink';
 import { Monitor } from '../../hyprland';
 import { correctRowAspect } from '../../utils/scaling';
+import { useTheme } from '../../theme/context';
 
 type MonitorSetupProps = {
   monitors: Monitor[];
@@ -10,6 +11,7 @@ type MonitorSetupProps = {
 };
 
 export const MonitorSetup = ({ monitors, width, height, selectedMonitorId }: MonitorSetupProps) => {
+  const theme = useTheme();
   const monitorsMinX = Math.min(...monitors.map((monitor) => monitor.x));
   const monitorsMaxX = Math.max(...monitors.map((monitor) => monitor.x + monitor.width));
   const monitorsMinY = Math.min(...monitors.map((monitor) => monitor.y));
@@ -48,15 +50,15 @@ export const MonitorSetup = ({ monitors, width, height, selectedMonitorId }: Mon
             height={constraint.height}
             position="absolute"
             borderStyle="round"
-            borderColor={isSelected ? 'cyan' : undefined}
+            borderColor={isSelected ? theme.primary : undefined}
             marginLeft={constraint.x}
             marginTop={constraint.y}
             justifyContent="center"
             alignItems="center"
             flexDirection="column"
           >
-            <Text color={isSelected ? 'cyan' : undefined}>{constraint.monitor.name}</Text>
-            <Text color={isSelected ? 'cyan' : undefined}>
+            <Text color={isSelected ? theme.primary : undefined}>{constraint.monitor.name}</Text>
+            <Text color={isSelected ? theme.primary : undefined}>
               {constraint.monitor.width}x{constraint.monitor.height}@
               {formatRefreshRate(constraint.monitor.refreshRate)}Hz
             </Text>

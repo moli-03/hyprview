@@ -31,6 +31,21 @@ export class JsonParseError extends Error {
   }
 }
 
+type ConfigErrorOptions = {
+  path: string;
+  cause?: Error;
+};
+
+export class ConfigError extends Error {
+  readonly path: string;
+
+  constructor(message: string, options: ConfigErrorOptions) {
+    super(message, { cause: options.cause });
+    this.name = 'ConfigError';
+    this.path = options.path;
+  }
+}
+
 export const getErrorOrUndefined = (error: unknown): Error | undefined => {
   if (error instanceof Error) {
     return error;
