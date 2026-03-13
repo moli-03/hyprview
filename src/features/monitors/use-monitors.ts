@@ -8,7 +8,9 @@ export const useMonitors = () => {
     return queryPort.getMonitors().map(setMonitors);
   }, []);
 
-  useEffect(() => { fetchMonitors(); }, []);
+  useEffect(() => {
+    fetchMonitors();
+  }, []);
 
   return { monitors, refetch: fetchMonitors };
 };

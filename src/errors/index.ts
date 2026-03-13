@@ -16,7 +16,6 @@ export class TerminalError extends Error {
   }
 }
 
-
 type JsonParseErrorOptions = {
   json: string;
   cause?: Error;
@@ -24,7 +23,7 @@ type JsonParseErrorOptions = {
 
 export class JsonParseError extends Error {
   readonly json: string;
-  
+
   constructor(message: string, options: JsonParseErrorOptions) {
     super(message, { cause: options.cause });
     this.name = 'JsonParseError';
@@ -38,4 +37,4 @@ export const getErrorOrUndefined = (error: unknown): Error | undefined => {
   }
 
   return undefined;
-}
+};

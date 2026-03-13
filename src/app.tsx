@@ -1,18 +1,25 @@
-import { Box, Text, useStdout } from 'ink';
+import { Box, Text, useInput } from 'ink';
+import { useState } from 'react';
 import { useMonitors } from './features/monitors/use-monitors';
 import { MonitorShort } from './features/monitors/monitor-short';
 
 export const App = () => {
 
   const { monitors } = useMonitors();
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  useInput((input) => {
+    if (input === 'j') setSelectedIndex(i => Math.min(i + 1, monitors.length - 1));
+    if (input === 'k') setSelectedIndex(i => Math.max(i - 1, 0));
+  });
 
   return (
     <Box flexDirection="row">
       <Box flexDirection="column" borderStyle="round" paddingX={1}>
         <Text color="cyan" bold>Monitors:</Text>
         <Box flexDirection="column" paddingTop={1}>
-          {monitors.map(monitor => (
-            <MonitorShort key={monitor.id} monitor={monitor} />
+          {monitors.map((monitor, index) => (
+            <MonitorShort key={monitor.id} monitor={monitor} isSelected={index === selectedIndex} />
           ))}
         </Box>
       </Box>
@@ -24,6 +31,7 @@ export const App = () => {
             width={30}
             height={10}
             borderStyle="round"
+            borderColor={index === selectedIndex ? 'cyan' : undefined}
             justifyContent="center"
             alignItems="center"
             position="absolute"

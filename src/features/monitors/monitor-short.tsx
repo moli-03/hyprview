@@ -1,10 +1,18 @@
-import { Monitor } from "../../hyprland";
-import { Box, Text } from "ink";
-export const MonitorShort = ({ monitor }: { monitor: Monitor }) => {
+import { Monitor } from '../../hyprland';
+import { Box, Text } from 'ink';
+export const MonitorShort = ({
+  monitor,
+  isSelected,
+}: {
+  monitor: Monitor;
+  isSelected: boolean;
+}) => {
   return (
-    <Box flexDirection="row" gap={2}>
-      <Text color="green">({ monitor.id }) { monitor.name }:</Text>
-      <Text>{ monitor.description }</Text>
+    <Box flexDirection="row" gap={1}>
+      <Text color={isSelected ? 'cyan' : 'green'}>
+        [{isSelected ? '>' : ' '}] {monitor.name}:
+      </Text>
+      <Text color={isSelected ? 'cyan' : undefined}>{monitor.description}</Text>
     </Box>
   );
-}
+};
