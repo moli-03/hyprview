@@ -13,13 +13,10 @@
     {
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = with pkgs; [
-          nodejs_24
           bun
-          nodePackages.typescript
         ];
 
         shellHook = ''
-          echo "Node version: $(node -v)"
           echo "Bun version: $(bun -v)"
         '';
       };

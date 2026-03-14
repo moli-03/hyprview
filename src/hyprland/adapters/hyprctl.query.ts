@@ -52,25 +52,35 @@ export const createHyprctlQueryAdapter = (hyprlandConfigPath: string): HyprlandQ
   };
 
   const getMonitorConfigurations = () => {
+    const parseConfigLine = (line: string): string[] => {
+      const [, config] = line.split("=");
+      return config.split(",");
+    };
+
+    const isValidConfig = (config: string[]): boolean => {
+      const isDisabled = config.length === 2 && config[1] === "disabled";
+      return isDisabled || config.length >= 4;
+    };
+
+    const deduplicateByName = (configs: string[][]): string[][] => {
+      const seen = new Set<string>();
+      return configs.filter(config => {
+        const name = config[0];
+        if (seen.has(name)) return false;
+        seen.add(name);
+        return true;
+      });
+    };
+
     return execute(["sh", "-c", `grep -ri "monitor=" ${hyprlandConfigPath}`])
-      .map(results => {
-        const seen = new Set<string>();
-        return results
+      .map(results =>
+        results
           .split("\n")
           .filter(line => line.trim() !== "")
-          .map(line => {
-            const [_, config] = line.split("=");
-            return config.split(",");
-          })
-          .filter(config => {
-            const isDisabled = config.length === 2 && config[1] === "disabled";
-            if (!isDisabled && config.length < 4) return false;
-            const name = config[0];
-            if (seen.has(name)) return false;
-            seen.add(name);
-            return true;
-          });
-      })
+          .map(parseConfigLine)
+          .filter(isValidConfig),
+      )
+      .map(deduplicateByName)
       .andThen(configs => Result.combine(configs.map(parseMonitorConfiguration)));
   };
 
