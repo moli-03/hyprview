@@ -1,11 +1,12 @@
-import { Box, Text, useInput, useStdout } from 'ink';
-import { useMonitors } from './use-monitors';
-import { Arrow, MonitorShort } from './short';
-import { useMemo, useState } from 'react';
-import { useTheme } from '../../theme/context';
-import { MonitorSetup } from './setup';
-import { MirrorMenu } from './mirror-menu';
-import type { Monitor } from '../../hyprland';
+import { Box, Text, useInput, useStdout } from "ink";
+import { useMonitors } from "./use-monitors";
+import { Arrow, MonitorShort } from "./short";
+import { useMemo, useState } from "react";
+import { useTheme } from "../../theme/context";
+import { MonitorSetup } from "./setup";
+import { MirrorMenu } from "./mirror-menu";
+import { queryPort, type Monitor } from "../../hyprland";
+import { createMonitorConfiguration } from "../../hyprland/utils/monitor";
 
 type MonitorOverviewProps = {
   width: number;
@@ -13,7 +14,7 @@ type MonitorOverviewProps = {
 };
 
 export const MonitorOverview = ({ width, height }: MonitorOverviewProps) => {
-  const { monitors } = useMonitors();
+  const { monitors, defaultMonitorConfiguration } = useMonitors();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [showMirrorMenu, setShowMirrorMenu] = useState(false);
   const selectedMonitor = monitors[selectedIndex];
@@ -30,28 +31,37 @@ export const MonitorOverview = ({ width, height }: MonitorOverviewProps) => {
       setShowMirrorMenu(false);
 
       if (selectedMonitor) {
-        // TODO: Apply monitor configuration
+        queryPort.applyMonitorConfiguration(
+          createMonitorConfiguration(selectedMonitor, {
+            mirrorOf: monitor.name,
+          }),
+        );
       }
     }
   };
 
   useInput(
-    (input) => {
-      if (input === 'j') {
-        setSelectedIndex((i) => Math.min(i + 1, monitors.length - 1));
+    input => {
+      if (input === "j") {
+        setSelectedIndex(i => Math.min(i + 1, monitors.length - 1));
       }
-      if (input === 'k') {
-        setSelectedIndex((i) => Math.max(i - 1, 0));
+      if (input === "k") {
+        setSelectedIndex(i => Math.max(i - 1, 0));
       }
-      if (input === 'm' && selectedMonitor) {
+      if (input === "m" && selectedMonitor) {
         setShowMirrorMenu(true);
+      }
+      if (input === "r") {
+        defaultMonitorConfiguration.forEach(configuration => {
+          queryPort.applyMonitorConfiguration(configuration);
+        });
       }
     },
     { isActive: !showMirrorMenu },
   );
 
   const setupWidth = Math.floor((width * 3) / 5);
-  const listWidth = width - setupWidth - 1;
+  const listWidth = Math.floor(width - setupWidth - 1);
 
   return (
     <Box flexDirection="row" gap={1}>
@@ -73,7 +83,7 @@ export const MonitorOverview = ({ width, height }: MonitorOverviewProps) => {
         </Box>
         {!showMirrorMenu && (
           <Text color={theme.muted} italic>
-            [j/k] to navigate, [enter] to select, [m] to mirror
+            [j/k] to navigate, [enter] to select, [m] to mirror, [r] to reset
           </Text>
         )}
 

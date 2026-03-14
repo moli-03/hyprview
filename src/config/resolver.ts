@@ -1,12 +1,12 @@
-import { Config, Theme } from './types';
-import { DEFAULT_THEME } from './defaults';
+import { Config, Theme } from "./types";
+import { DEFAULT_THEME } from "./defaults";
 
 export const resolveTheme = (config: Config | null): Theme => {
   if (!config?.colors) return DEFAULT_THEME;
 
   const colors = config.colors;
 
-  if ('base00' in colors) {
+  if ("base00" in colors) {
     return {
       background: colors.base00,
       muted: colors.base03,
@@ -20,7 +20,7 @@ export const resolveTheme = (config: Config | null): Theme => {
     };
   }
 
-  if ('primary' in colors) {
+  if ("primary" in colors) {
     return colors;
   }
 

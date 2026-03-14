@@ -1,8 +1,8 @@
-import { Box, Text, useInput } from 'ink';
-import { Monitor } from '../../hyprland';
-import { useTheme } from '../../theme/context';
-import { Arrow, MonitorShort } from './short';
-import { useState } from 'react';
+import { Box, Text, useInput } from "ink";
+import { Monitor } from "../../hyprland";
+import { useTheme } from "../../theme/context";
+import { Arrow, MonitorShort } from "./short";
+import { useState } from "react";
 
 type MirrorMenuProps = {
   monitors: Monitor[];
@@ -16,11 +16,11 @@ export const MirrorMenu = ({ monitors, selectedMonitor, onSelect }: MirrorMenuPr
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useInput((input, key) => {
-    if (input === 'j') {
-      setSelectedIndex((i) => Math.min(i + 1, monitors.length - 1));
+    if (input === "j") {
+      setSelectedIndex(i => Math.min(i + 1, monitors.length - 1));
     }
-    if (input === 'k') {
-      setSelectedIndex((i) => Math.max(i - 1, 0));
+    if (input === "k") {
+      setSelectedIndex(i => Math.max(i - 1, 0));
     }
     if (key.escape) {
       onSelect(null);

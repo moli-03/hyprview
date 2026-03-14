@@ -1,7 +1,7 @@
-import { Box, Text } from 'ink';
-import { Monitor } from '../../hyprland';
-import { correctRowAspect } from '../../utils/scaling';
-import { useTheme } from '../../theme/context';
+import { Box, Text } from "ink";
+import { Monitor } from "../../hyprland";
+import { correctRowAspect } from "../../utils/scaling";
+import { useTheme } from "../../theme/context";
 
 const formatRefreshRate = (refreshRate: number) => refreshRate.toFixed(2);
 
@@ -14,10 +14,10 @@ type MonitorSetupProps = {
 
 export const MonitorSetup = ({ monitors, width, height, selectedMonitorId }: MonitorSetupProps) => {
   const theme = useTheme();
-  const monitorsMinX = Math.min(...monitors.map((monitor) => monitor.x));
-  const monitorsMaxX = Math.max(...monitors.map((monitor) => monitor.x + monitor.width));
-  const monitorsMinY = Math.min(...monitors.map((monitor) => monitor.y));
-  const monitorsMaxY = Math.max(...monitors.map((monitor) => monitor.y + monitor.height));
+  const monitorsMinX = Math.min(...monitors.map(monitor => monitor.x));
+  const monitorsMaxX = Math.max(...monitors.map(monitor => monitor.x + monitor.width));
+  const monitorsMinY = Math.min(...monitors.map(monitor => monitor.y));
+  const monitorsMaxY = Math.max(...monitors.map(monitor => monitor.y + monitor.height));
 
   const monitorSetupWidth = monitorsMaxX - monitorsMinX;
   const monitorSetupHeight = monitorsMaxY - monitorsMinY;
@@ -39,7 +39,7 @@ export const MonitorSetup = ({ monitors, width, height, selectedMonitorId }: Mon
 
   return (
     <Box width={width} height={correctRowAspect(height)}>
-      {monitorConstraints.map((constraint) => {
+      {monitorConstraints.map(constraint => {
         const isSelected = constraint.monitor.id === selectedMonitorId;
         return (
           <Box

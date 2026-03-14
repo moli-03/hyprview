@@ -1,15 +1,18 @@
 export type ColorManagementPreset =
-  | 'none'
-  | 'srgb'
-  | 'hdr'
-  | 'hdredid'
-  | 'dcip3'
-  | 'dp3'
-  | 'adobe'
-  | 'wide'
-  | 'edid'
-  | 'auto';
+  | "none"
+  | "srgb"
+  | "hdr"
+  | "hdredid"
+  | "dcip3"
+  | "dp3"
+  | "adobe"
+  | "wide"
+  | "edid"
+  | "auto";
 export type Transform = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+export type BitDepth = 8 | 10;
+export type SdrEotf = 0 | 1 | 2;
+export type Vrr = 0 | 1 | 2;
 
 export type Monitor = {
   id: number;
@@ -32,7 +35,7 @@ export type Monitor = {
   transform: Transform;
   focused: boolean;
   dpmsStatus: boolean;
-  vrr: 0 | 1 | 2;
+  vrr: Vrr;
   solitary: string;
   solitaryBlockedBy: string[];
   activelyTearing: boolean;
@@ -61,11 +64,11 @@ export type MonitorConfiguration = {
   mirrorOf: string | null;
   disabled?: boolean;
   transform?: Transform;
-  bitdepth?: 8 | 10;
+  bitdepth?: BitDepth;
   cm?: ColorManagementPreset;
   sdrBrightness?: number;
   sdrSaturation?: number;
-  sdrEotf?: 0 | 1 | 2;
-  vrr?: 0 | 1 | 2;
+  sdrEotf?: SdrEotf;
+  vrr?: Vrr;
   icc?: string;
 };

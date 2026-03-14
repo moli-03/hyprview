@@ -1,10 +1,10 @@
-import { Monitor } from '../../hyprland';
-import { Box, Text } from 'ink';
-import { useTheme } from '../../theme/context';
+import { Monitor } from "../../hyprland";
+import { Box, Text } from "ink";
+import { useTheme } from "../../theme/context";
 
 export const Arrow = ({ isSelected }: { isSelected: boolean }) => {
   const theme = useTheme();
-  return <Text color={theme.primary}>{isSelected ? '>' : ' '}</Text>;
+  return <Text color={theme.primary}>{isSelected ? ">" : " "}</Text>;
 };
 
 export const MonitorShort = ({
@@ -31,7 +31,7 @@ export const MonitorShort = ({
       return name;
     }
 
-    return name.slice(0, maxNameLength - 3) + '...';
+    return name.slice(0, maxNameLength - 3) + "...";
   };
 
   return (

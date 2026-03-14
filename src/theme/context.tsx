@@ -1,6 +1,6 @@
-import { createContext, useContext } from 'react';
-import { DEFAULT_THEME } from '../config/defaults';
-import { Theme } from '../config/types';
+import { createContext, useContext } from "react";
+import { DEFAULT_THEME } from "../config/defaults";
+import { Theme } from "../config/types";
 
 const ThemeContext = createContext<Theme>(DEFAULT_THEME);
 

@@ -10,7 +10,7 @@ export class TerminalError extends Error {
 
   constructor(message: string, options: TerminalErrorOptions) {
     super(message, { cause: options.cause });
-    this.name = 'TerminalError';
+    this.name = "TerminalError";
     this.command = options.command;
     this.exitCode = options.exitCode;
   }
@@ -26,7 +26,7 @@ export class JsonParseError extends Error {
 
   constructor(message: string, options: JsonParseErrorOptions) {
     super(message, { cause: options.cause });
-    this.name = 'JsonParseError';
+    this.name = "JsonParseError";
     this.json = options.json;
   }
 }
@@ -41,8 +41,23 @@ export class ConfigError extends Error {
 
   constructor(message: string, options: ConfigErrorOptions) {
     super(message, { cause: options.cause });
-    this.name = 'ConfigError';
+    this.name = "ConfigError";
     this.path = options.path;
+  }
+}
+
+type ParseErrorOptions = {
+  value: string;
+  cause?: Error;
+};
+
+export class ParseError extends Error {
+  readonly value: string;
+
+  constructor(message: string, options: ParseErrorOptions) {
+    super(message, { cause: options.cause });
+    this.name = "ParseError";
+    this.value = options.value;
   }
 }
 

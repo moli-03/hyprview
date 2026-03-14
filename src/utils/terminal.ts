@@ -1,6 +1,6 @@
-import { ResultAsync, fromPromise } from 'neverthrow';
-import { TerminalError, getErrorOrUndefined } from '../errors';
-import { spawn } from 'bun';
+import { ResultAsync, fromPromise } from "neverthrow";
+import { TerminalError, getErrorOrUndefined } from "../errors";
+import { spawn } from "bun";
 
 export const execute = (parts: string | string[]): ResultAsync<string, TerminalError> => {
   const command = splitParts(parts);
@@ -9,9 +9,9 @@ export const execute = (parts: string | string[]): ResultAsync<string, TerminalE
 
   return fromPromise(
     new Response(proc.stdout).text(),
-    (error) =>
+    error =>
       new TerminalError(`Failed to execute command: ${command}`, {
-        command: command.join(' '),
+        command: command.join(" "),
         exitCode: proc.exitCode,
         cause: getErrorOrUndefined(error),
       }),
@@ -23,5 +23,5 @@ const splitParts = (parts: string | string[]) => {
     return parts;
   }
 
-  return parts.split(' ');
+  return parts.split(" ");
 };
