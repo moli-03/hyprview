@@ -17,6 +17,7 @@ export const createHyprctlQueryAdapter = (hyprlandConfigPath: string): HyprlandQ
     getMonitorConfigurations: () => {
       return execute(["sh", "-c", `grep -ri "monitor=" ${hyprlandConfigPath}`])
         .map(results => {
+          const seen = new Set<string>();
           return results
             .split("\n")
             .filter(line => line.trim() !== "")
@@ -24,11 +25,17 @@ export const createHyprctlQueryAdapter = (hyprlandConfigPath: string): HyprlandQ
               const [_, config] = line.split("=");
               return config.split(",");
             })
-            .filter(config => config.length >= 4); // at least name, width, height, refreshRate (maybe there are some from hyprlock)
+            .filter(config => {
+              if (config.length < 4) return false;
+              const name = config[0];
+              if (seen.has(name)) return false;
+              seen.add(name);
+              return true;
+            });
         })
         .andThen(configs => Result.combine(configs.map(parseMonitorConfiguration)));
     },
   };
 };
 
-export default createHyprctlQueryAdapter("~/.config/hypr/*");
+export default createHyprctlQueryAdapter("~/.config/hypr/hyprland.conf");
