@@ -44,7 +44,7 @@ export type Monitor = {
   directScanoutBlockedBy: string[];
   disabled: boolean;
   currentFormat: string;
-  mirrorOf: string;
+  mirrorOf: string | null;
   availableModes: string[];
   colorManagementPreset: ColorManagementPreset;
   sdrBrightness: number;
@@ -53,7 +53,12 @@ export type Monitor = {
   sdrMaxLuminance: number;
 };
 
-export type MonitorConfiguration = {
+export type DisabledMonitorConfiguration = {
+  name: string;
+  disabled: true;
+};
+
+export type ActiveMonitorConfiguration = {
   name: string;
   width: number;
   height: number;
@@ -62,7 +67,7 @@ export type MonitorConfiguration = {
   y: number;
   scale: number;
   mirrorOf: string | null;
-  disabled?: boolean;
+  disabled?: false;
   transform?: Transform;
   bitdepth?: BitDepth;
   cm?: ColorManagementPreset;
@@ -72,3 +77,5 @@ export type MonitorConfiguration = {
   vrr?: Vrr;
   icc?: string;
 };
+
+export type MonitorConfiguration = DisabledMonitorConfiguration | ActiveMonitorConfiguration;

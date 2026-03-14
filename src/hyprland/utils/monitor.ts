@@ -1,5 +1,6 @@
 import { Result, err, ok } from "neverthrow";
 import type {
+  ActiveMonitorConfiguration,
   BitDepth,
   ColorManagementPreset,
   Monitor,
@@ -55,8 +56,8 @@ export function formatMonitorConfiguration(configuration: MonitorConfiguration):
 
 export function createMonitorConfiguration(
   monitor: Monitor,
-  configuration: Partial<MonitorConfiguration>,
-): MonitorConfiguration {
+  configuration: Partial<ActiveMonitorConfiguration>,
+): ActiveMonitorConfiguration {
   return {
     name: monitor.name,
     width: monitor.width,
@@ -67,7 +68,6 @@ export function createMonitorConfiguration(
     scale: monitor.scale,
     mirrorOf: monitor.mirrorOf,
     transform: monitor.transform,
-    disabled: monitor.disabled,
     sdrBrightness: monitor.sdrBrightness,
     sdrSaturation: monitor.sdrSaturation,
     vrr: monitor.vrr,
@@ -80,6 +80,10 @@ export function parseMonitorConfiguration(
   configuration: string | string[],
 ): Result<MonitorConfiguration, ParseError> {
   const parts = typeof configuration === "string" ? configuration.split(",") : configuration;
+
+  if (parts.length >= 2 && parts[1] === "disabled") {
+    return ok({ name: parts[0], disabled: true as const });
+  }
 
   if (parts.length < 4) {
     return err(new ParseError("Invalid monitor configuration", { value: parts.join(",") }));

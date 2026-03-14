@@ -27,17 +27,21 @@ export const MonitorOverview = ({ width, height }: MonitorOverviewProps) => {
   );
 
   const handleMirrorSelect = (monitor: Monitor | null) => {
-    if (monitor) {
-      setShowMirrorMenu(false);
+    setShowMirrorMenu(false);
 
-      if (selectedMonitor) {
-        queryPort.applyMonitorConfiguration(
-          createMonitorConfiguration(selectedMonitor, {
-            mirrorOf: monitor.name,
-          }),
-        );
-      }
+    if (!monitor) {
+      return;
     }
+
+    if (!selectedMonitor) {
+      return;
+    }
+
+    queryPort.applyMonitorConfiguration(
+      createMonitorConfiguration(selectedMonitor, {
+        mirrorOf: monitor.name,
+      }),
+    );
   };
 
   useInput(

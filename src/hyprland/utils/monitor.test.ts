@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test";
 import { formatMonitorConfiguration, parseMonitorConfiguration } from "./monitor";
-import type { MonitorConfiguration } from "../types/monitor";
+import type { ActiveMonitorConfiguration } from "../types/monitor";
 import { ParseError } from "../../errors";
 
-const base: MonitorConfiguration = {
+const base: ActiveMonitorConfiguration = {
   name: "DP-1",
   width: 2560,
   height: 1440,
@@ -21,15 +21,7 @@ describe("formatMonitorConfiguration", () => {
     });
 
     test("disabled ignores all other fields", () => {
-      expect(
-        formatMonitorConfiguration({
-          ...base,
-          disabled: true,
-          transform: 3,
-          bitdepth: 10,
-          vrr: 1,
-        }),
-      ).toBe("DP-1,disabled");
+      expect(formatMonitorConfiguration({ name: "DP-1", disabled: true })).toBe("DP-1,disabled");
     });
   });
 
@@ -156,7 +148,7 @@ describe("formatMonitorConfiguration", () => {
 
   describe("ordering (integration)", () => {
     test("all fields → exact full string in documented order", () => {
-      const config: MonitorConfiguration = {
+      const config: ActiveMonitorConfiguration = {
         name: "HDMI-A-1",
         width: 1920,
         height: 1080,
@@ -202,11 +194,23 @@ describe("parseMonitorConfiguration", () => {
     });
   });
 
+  describe("disabled", () => {
+    test("disabled config has no width/height/etc", () => {
+      const config = parseMonitorConfiguration("DP-2,disabled")._unsafeUnwrap();
+      expect(config).toEqual({ name: "DP-2", disabled: true });
+    });
+
+    test("array input: ['DP-2', 'disabled'] works", () => {
+      const config = parseMonitorConfiguration(["DP-2", "disabled"])._unsafeUnwrap();
+      expect(config).toEqual({ name: "DP-2", disabled: true });
+    });
+  });
+
   describe("basic (required fields only)", () => {
     test("parses all required fields correctly", () => {
       const result = parseMonitorConfiguration("DP-1,1920x1080@60,0x0,1");
       expect(result.isOk()).toBe(true);
-      const config = result._unsafeUnwrap();
+      const config = result._unsafeUnwrap() as ActiveMonitorConfiguration;
       expect(config.name).toBe("DP-1");
       expect(config.width).toBe(1920);
       expect(config.height).toBe(1080);
@@ -219,70 +223,53 @@ describe("parseMonitorConfiguration", () => {
   });
 
   describe("optional fields", () => {
+    const parseActive = (s: string) =>
+      parseMonitorConfiguration(s)._unsafeUnwrap() as ActiveMonitorConfiguration;
+
     test("transform → parsed as integer Transform", () => {
-      const config = parseMonitorConfiguration(
-        "DP-1,1920x1080@60,0x0,1,transform,3",
-      )._unsafeUnwrap();
-      expect(config.transform).toBe(3);
+      expect(parseActive("DP-1,1920x1080@60,0x0,1,transform,3").transform).toBe(3);
     });
 
     test("mirror → sets mirrorOf", () => {
-      const config = parseMonitorConfiguration(
-        "DP-1,1920x1080@60,0x0,1,mirror,HDMI-A-1",
-      )._unsafeUnwrap();
-      expect(config.mirrorOf).toBe("HDMI-A-1");
+      expect(parseActive("DP-1,1920x1080@60,0x0,1,mirror,HDMI-A-1").mirrorOf).toBe("HDMI-A-1");
     });
 
     test("bitdepth 10 → parsed correctly", () => {
-      const config = parseMonitorConfiguration(
-        "DP-1,1920x1080@60,0x0,1,bitdepth,10",
-      )._unsafeUnwrap();
-      expect(config.bitdepth).toBe(10);
+      expect(parseActive("DP-1,1920x1080@60,0x0,1,bitdepth,10").bitdepth).toBe(10);
     });
 
     test("bitdepth 8 → parsed correctly", () => {
-      const config = parseMonitorConfiguration(
-        "DP-1,1920x1080@60,0x0,1,bitdepth,8",
-      )._unsafeUnwrap();
-      expect(config.bitdepth).toBe(8);
+      expect(parseActive("DP-1,1920x1080@60,0x0,1,bitdepth,8").bitdepth).toBe(8);
     });
 
     test("cm → ColorManagementPreset string", () => {
-      const config = parseMonitorConfiguration("DP-1,1920x1080@60,0x0,1,cm,hdr")._unsafeUnwrap();
-      expect(config.cm).toBe("hdr");
+      expect(parseActive("DP-1,1920x1080@60,0x0,1,cm,hdr").cm).toBe("hdr");
     });
 
     test("sdrbrightness → float", () => {
-      const config = parseMonitorConfiguration(
-        "DP-1,1920x1080@60,0x0,1,sdrbrightness,0.8",
-      )._unsafeUnwrap();
-      expect(config.sdrBrightness).toBeCloseTo(0.8);
+      expect(parseActive("DP-1,1920x1080@60,0x0,1,sdrbrightness,0.8").sdrBrightness).toBeCloseTo(
+        0.8,
+      );
     });
 
     test("sdrsaturation → float", () => {
-      const config = parseMonitorConfiguration(
-        "DP-1,1920x1080@60,0x0,1,sdrsaturation,1.2",
-      )._unsafeUnwrap();
-      expect(config.sdrSaturation).toBeCloseTo(1.2);
+      expect(parseActive("DP-1,1920x1080@60,0x0,1,sdrsaturation,1.2").sdrSaturation).toBeCloseTo(
+        1.2,
+      );
     });
 
     test("sdr_eotf → 0|1|2", () => {
-      const config = parseMonitorConfiguration(
-        "DP-1,1920x1080@60,0x0,1,sdr_eotf,2",
-      )._unsafeUnwrap();
-      expect(config.sdrEotf).toBe(2);
+      expect(parseActive("DP-1,1920x1080@60,0x0,1,sdr_eotf,2").sdrEotf).toBe(2);
     });
 
     test("vrr → 0|1|2", () => {
-      const config = parseMonitorConfiguration("DP-1,1920x1080@60,0x0,1,vrr,1")._unsafeUnwrap();
-      expect(config.vrr).toBe(1);
+      expect(parseActive("DP-1,1920x1080@60,0x0,1,vrr,1").vrr).toBe(1);
     });
 
     test("icc → string path", () => {
-      const config = parseMonitorConfiguration(
-        "DP-1,1920x1080@60,0x0,1,icc,/path/color.icc",
-      )._unsafeUnwrap();
-      expect(config.icc).toBe("/path/color.icc");
+      expect(parseActive("DP-1,1920x1080@60,0x0,1,icc,/path/color.icc").icc).toBe(
+        "/path/color.icc",
+      );
     });
   });
 
